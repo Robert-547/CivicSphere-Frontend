@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { 
   Menu, 
   X, 
@@ -28,12 +29,12 @@ const Header = ({ userType = null }: HeaderProps) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
               <Home className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gradient">CivicSphere</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -53,14 +54,14 @@ const Header = ({ userType = null }: HeaderProps) => {
             
             {userType === 'customer' && (
               <>
-                <a href="#dashboard" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
+                <Link to="/customer-dashboard" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
                   <Home className="w-4 h-4" />
                   <span>Dashboard</span>
-                </a>
-                <a href="#my-jobs" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
+                </Link>
+                <Link to="/post-job" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
                   <Briefcase className="w-4 h-4" />
-                  <span>My Jobs</span>
-                </a>
+                  <span>Post Job</span>
+                </Link>
                 <a href="#messages" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
                   <MessageCircle className="w-4 h-4" />
                   <span>Messages</span>
@@ -70,10 +71,10 @@ const Header = ({ userType = null }: HeaderProps) => {
 
             {userType === 'worker' && (
               <>
-                <a href="#dashboard" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
+                <Link to="/worker-dashboard" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
                   <Home className="w-4 h-4" />
                   <span>Dashboard</span>
-                </a>
+                </Link>
                 <a href="#available-jobs" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1">
                   <Briefcase className="w-4 h-4" />
                   <span>Available Jobs</span>
@@ -90,8 +91,12 @@ const Header = ({ userType = null }: HeaderProps) => {
           <div className="hidden md:flex items-center space-x-4">
             {!userType ? (
               <>
-                <Button variant="ghost">Sign In</Button>
-                <Button className="gradient-primary text-white">Get Started</Button>
+                <Link to="/login">
+                  <Button variant="ghost">Sign In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="gradient-primary text-white">Get Started</Button>
+                </Link>
               </>
             ) : (
               <>
@@ -130,8 +135,12 @@ const Header = ({ userType = null }: HeaderProps) => {
                   </a>
                   <div className="pt-4 border-t border-border">
                     <div className="flex flex-col space-y-2">
-                      <Button variant="ghost" className="justify-start">Sign In</Button>
-                      <Button className="gradient-primary text-white justify-start">Get Started</Button>
+                      <Link to="/login">
+                        <Button variant="ghost" className="justify-start w-full">Sign In</Button>
+                      </Link>
+                      <Link to="/signup">
+                        <Button className="gradient-primary text-white justify-start w-full">Get Started</Button>
+                      </Link>
                     </div>
                   </div>
                 </>
@@ -139,14 +148,14 @@ const Header = ({ userType = null }: HeaderProps) => {
               
               {userType && (
                 <>
-                  <a href="#dashboard" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-2">
+                  <Link to={userType === 'customer' ? '/customer-dashboard' : '/worker-dashboard'} className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-2">
                     <Home className="w-4 h-4" />
                     <span>Dashboard</span>
-                  </a>
-                  <a href="#jobs" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-2">
+                  </Link>
+                  <Link to={userType === 'customer' ? '/post-job' : '#available-jobs'} className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-2">
                     <Briefcase className="w-4 h-4" />
-                    <span>{userType === 'customer' ? 'My Jobs' : 'Available Jobs'}</span>
-                  </a>
+                    <span>{userType === 'customer' ? 'Post Job' : 'Available Jobs'}</span>
+                  </Link>
                   <a href="#messages" className="text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-2">
                     <MessageCircle className="w-4 h-4" />
                     <span>Messages</span>
