@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const ServicesCTA = () => {
@@ -14,13 +13,13 @@ const ServicesCTA = () => {
         </p>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button size="lg" className="gradient-primary text-white">
+        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 rounded-md px-8 gradient-primary text-white">
           Post a Job
           <ArrowRight className="w-5 h-5 ml-2" />
-        </Button>
-        <Button size="lg" variant="outline">
+        </button>
+        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 rounded-md px-8 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
           Browse All Services
-        </Button>
+        </button>
       </div>
     </div>
   );

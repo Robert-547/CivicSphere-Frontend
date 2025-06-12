@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { LucideIcon } from 'lucide-react';
 
 interface ServiceCardProps {
@@ -14,11 +13,11 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ icon: Icon, title, description, color, jobs, delay }: ServiceCardProps) => {
   return (
-    <Card 
-      className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:-translate-y-1 animate-fade-in"
+    <div 
+      className="group bg-card text-card-foreground shadow-sm border rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer hover:-translate-y-1 animate-fade-in"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <CardContent className="p-6 text-center space-y-4">
+      <div className="p-6 text-center space-y-4">
         <div className={`w-16 h-16 ${color} rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300`}>
           <Icon className="w-8 h-8 text-white" />
         </div>
@@ -33,8 +32,8 @@ const ServiceCard = ({ icon: Icon, title, description, color, jobs, delay }: Ser
             {jobs}
           </p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
