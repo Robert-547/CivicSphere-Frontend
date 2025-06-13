@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface Job {
@@ -42,10 +41,12 @@ const initialJobs: Job[] = [
     urgency: 'high',
     budget: '$100-150',
     postedDate: '2 hours ago',
-    customer: 'Sarah Johnson',
+    customer: 'Current User',
     customerPhone: '+1-555-0101',
-    status: 'pending',
-    proposals: 2
+    status: 'in-progress',
+    worker: 'John Smith',
+    workerPhone: '+1-555-0123',
+    workerRating: 4.8
   },
   {
     id: 2,
