@@ -12,48 +12,22 @@ import {
   DollarSign,
   Phone,
   MessageCircle,
-  Star
+  Star,
+  Edit,
+  Trash2
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
+import { useJobs } from '@/contexts/JobContext';
+import JobForm, { JobFormData } from '@/components/JobManagement/JobForm';
 
 const CustomerDashboard = () => {
-  // Mock user jobs
-  const userJobs = [
-    {
-      id: 1,
-      title: 'Fix leaky kitchen faucet',
-      category: 'Plumbing',
-      status: 'in-progress',
-      worker: 'John Smith',
-      workerPhone: '+1-555-0123',
-      workerRating: 4.8,
-      budget: '$100-150',
-      postedDate: '2 days ago',
-      location: 'Downtown District'
-    },
-    {
-      id: 2,
-      title: 'Paint living room walls',
-      category: 'Painting',
-      status: 'pending',
-      budget: '$300-400',
-      postedDate: '1 day ago',
-      location: 'Residential Area',
-      proposals: 3
-    },
-    {
-      id: 3,
-      title: 'Electrical outlet repair',
-      category: 'Electrical',
-      status: 'completed',
-      worker: 'Mike Johnson',
-      workerRating: 4.9,
-      budget: '$80-120',
-      completedDate: '1 week ago',
-      location: 'Home Office'
-    }
-  ];
+  const [showJobForm, setShowJobForm] = useState(false);
+  const [editingJob, setEditingJob] = useState<number | null>(null);
+  const { jobs, addJob, updateJob, getJobsByCustomer } = useJobs();
+
+  // Mock customer info (this would come from auth)
+  const customerName = 'Current User';
+  const userJobs = getJobsByCustomer(customerName);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -73,6 +47,36 @@ const CustomerDashboard = () => {
     }
   };
 
+  const handleCreateJob = (jobData: JobFormData) => {
+    addJob(jobData);
+    setShowJobForm(false);
+  };
+
+  const handleUpdateJob = (jobData: JobFormData) => {
+    if (editingJob) {
+      updateJob(editingJob, jobData);
+      setEditingJob(null);
+    }
+  };
+
+  const handleEditJob = (jobId: number) => {
+    setEditingJob(jobId);
+  };
+
+  const handleDeleteJob = (jobId: number) => {
+    if (confirm('Are you sure you want to delete this job?')) {
+      // In a real app, you'd have a deleteJob function
+      console.log('Deleting job:', jobId);
+    }
+  };
+
+  const handleStartChat = (jobId: number) => {
+    console.log('Starting chat for job:', jobId);
+    // TODO: Implement chat functionality
+  };
+
+  const currentEditingJob = editingJob ? jobs.find(job => job.id === editingJob) : null;
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-secondary">
       <Header userType="customer" />
@@ -86,12 +90,13 @@ const CustomerDashboard = () => {
               Manage your home repair and maintenance requests
             </p>
           </div>
-          <Link to="/post-job">
-            <Button className="gradient-primary text-white">
-              <Plus className="h-4 w-4 mr-2" />
-              Post New Job
-            </Button>
-          </Link>
+          <Button 
+            className="gradient-primary text-white"
+            onClick={() => setShowJobForm(true)}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Post New Job
+          </Button>
         </div>
 
         {/* Stats Cards */}
@@ -168,6 +173,10 @@ const CustomerDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    {job.description}
+                  </p>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -201,9 +210,13 @@ const CustomerDashboard = () => {
                               Call
                             </Button>
                           )}
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleStartChat(job.id)}
+                          >
                             <MessageCircle className="h-4 w-4 mr-1" />
-                            Message
+                            Chat
                           </Button>
                         </div>
                       </div>
@@ -227,8 +240,22 @@ const CustomerDashboard = () => {
                     <div className="flex space-x-2">
                       {job.status === 'pending' && (
                         <>
-                          <Button variant="outline" size="sm">Edit</Button>
-                          <Button variant="destructive" size="sm">Cancel</Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditJob(job.id)}
+                          >
+                            <Edit className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => handleDeleteJob(job.id)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Delete
+                          </Button>
                         </>
                       )}
                       {job.status === 'completed' && (
@@ -252,15 +279,34 @@ const CustomerDashboard = () => {
             <p className="text-muted-foreground mb-4">
               You haven't posted any jobs yet. Get started by posting your first job!
             </p>
-            <Link to="/post-job">
-              <Button className="gradient-primary text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Post Your First Job
-              </Button>
-            </Link>
+            <Button 
+              className="gradient-primary text-white"
+              onClick={() => setShowJobForm(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Post Your First Job
+            </Button>
           </div>
         )}
       </main>
+
+      {/* Job Form Modal */}
+      {showJobForm && (
+        <JobForm
+          title="Post New Job"
+          onSubmit={handleCreateJob}
+          onCancel={() => setShowJobForm(false)}
+        />
+      )}
+
+      {editingJob && currentEditingJob && (
+        <JobForm
+          title="Edit Job"
+          initialData={currentEditingJob}
+          onSubmit={handleUpdateJob}
+          onCancel={() => setEditingJob(null)}
+        />
+      )}
     </div>
   );
 };
