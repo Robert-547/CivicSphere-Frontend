@@ -1,8 +1,4 @@
-
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { 
   MapPin, 
   Clock, 
@@ -16,9 +12,14 @@ import {
 } from 'lucide-react';
 import Header from '@/components/Header';
 import { useJobs } from '@/contexts/JobContext';
+import ChatModal from '@/components/Chat/ChatModal';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 const WorkerDashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [chatJobId, setChatJobId] = useState<number | null>(null);
   const { getAvailableJobsByExpertise, acceptJob, jobs } = useJobs();
 
   // Mock worker info (this would come from user profile/auth)
@@ -48,9 +49,10 @@ const WorkerDashboard = () => {
   };
 
   const handleStartChat = (jobId: number) => {
-    console.log('Starting chat for job:', jobId);
-    // TODO: Implement chat functionality
+    setChatJobId(jobId);
   };
+
+  const chatJob = chatJobId ? jobs.find(job => job.id === chatJobId) : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-secondary">
@@ -249,6 +251,16 @@ const WorkerDashboard = () => {
           </div>
         )}
       </main>
+
+      {/* Chat Modal */}
+      {chatJob && (
+        <ChatModal
+          job={chatJob}
+          currentUserId={workerInfo.name}
+          currentUserType="worker"
+          onClose={() => setChatJobId(null)}
+        />
+      )}
     </div>
   );
 };
